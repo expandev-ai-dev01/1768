@@ -60,9 +60,12 @@ export async function dbRequest(
   if (expectedReturn === ExpectedReturn.Multi) {
     if (resultSetNames && resultSetNames.length > 0) {
       const namedResults: any = {};
-      resultSetNames.forEach((name, index) => {
-        namedResults[name] = result.recordsets[index];
-      });
+      if (Array.isArray(result.recordsets)) {
+        const recordsets: sql.IRecordSet<any>[] = result.recordsets;
+        resultSetNames.forEach((name, index) => {
+          namedResults[name] = recordsets[index];
+        });
+      }
       return namedResults;
     }
     return result.recordsets;
